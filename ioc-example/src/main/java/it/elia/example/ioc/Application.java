@@ -4,12 +4,17 @@ import it.elia.example.ioc.color.Color;
 import it.elia.example.ioc.color.ColorConfiguration;
 import it.elia.example.ioc.color.Green;
 import it.elia.example.ioc.tools.Brush;
+import it.elia.example.ioc.tools.BrushPrototype;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Application {
 
     public static void main(String[] args) {
+        work();
+        component_scan();
+        green_is_green();
         brush_sigleton();
+        brush_prototype();
     }
 
 
@@ -51,6 +56,19 @@ public class Application {
         brush.setColor((Color) context.getBean("red"));
         System.out.println(brush.paint());
         Brush brush2 = context.getBean(Brush.class);
+        System.out.println(brush2.paint());
+    }
+
+    public static void brush_prototype() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.scan("it.elia.example.ioc.color");
+        context.register(BrushPrototype.class);
+        context.refresh();
+        BrushPrototype brush = context.getBean(BrushPrototype.class);
+        System.out.println(brush.paint());
+        brush.setColor((Color) context.getBean("red"));
+        System.out.println(brush.paint());
+        BrushPrototype brush2 = context.getBean(BrushPrototype.class);
         System.out.println(brush2.paint());
     }
 
